@@ -1,0 +1,72 @@
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Dark theme (default) ────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  --bg:          #0b0b12;
+  --s1:          #111119;
+  --s2:          #18182a;
+  --s3:          #1f1f35;
+  --s4:          #25253e;
+  --border:      rgba(120,120,200,.08);
+  --border2:     rgba(120,120,200,.16);
+  --accent:      #7c5cfc;
+  --accent-glow: rgba(124,92,252,.2);
+  --accent2:     #a78bfa;
+  --gold:        #f59e0b;
+  --green:       #22c55e;
+  --green-dim:   rgba(34,197,94,.12);
+  --red:         #ef4444;
+  --orange:      #f97316;
+  --text:        #e2e2f0;
+  --text2:       #8b8ba8;
+  --text3:       #4a4a68;
+  --radius:      16px;
+  --shadow:      0 8px 32px rgba(0,0,0,.4);
+  color-scheme:  dark;
+}
+
+/* ── Light theme ─────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:          #f3f3fc;
+  --s1:          #ffffff;
+  --s2:          #ebebf8;
+  --s3:          #e0e0f0;
+  --s4:          #d4d4ea;
+  --border:      rgba(60,60,140,.08);
+  --border2:     rgba(60,60,140,.16);
+  --accent:      #6b4ef8;
+  --accent-glow: rgba(107,78,248,.18);
+  --accent2:     #8b6ff5;
+  --gold:        #d97706;
+  --green:       #16a34a;
+  --green-dim:   rgba(22,163,74,.1);
+  --red:         #dc2626;
+  --orange:      #ea6c00;
+  --text:        #1a1a2e;
+  --text2:       #6262808;
+  --text3:       #9898b8;
+  --shadow:      0 4px 24px rgba(0,0,0,.1);
+  color-scheme:  light;
+}
+
+/* Fix light-mode text2 (typo-safe) */
+[data-theme="light"] { --text2: #626280; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s, color .25s;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, sans-serif;
+  min-height: 100vh;
+  padding: 28px 16px 60px;
+  transition: background-color .25s, color .25s;
+}
+
+button { font-family: inherit; }
+input, textarea { font-family: inherit; }

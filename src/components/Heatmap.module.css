@@ -1,0 +1,117 @@
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.head {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.wrap {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* Day labels column */
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 18px; /* align with cells below month row */
+  flex-shrink: 0;
+}
+
+.dayLabel {
+  font-size: .58rem;
+  font-weight: 600;
+  color: var(--text3);
+  height: 13px;
+  line-height: 13px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dayLabel.hidden { visibility: hidden; }
+
+/* Grid area */
+.gridWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.monthRow {
+  display: flex;
+  gap: 3px;
+  min-height: 15px;
+}
+
+.monthCell {
+  width: 13px;
+  font-size: .6rem;
+  font-weight: 600;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.grid {
+  display: flex;
+  gap: 3px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  transition: transform .1s, opacity .1s;
+  cursor: default;
+}
+
+.cell:hover {
+  transform: scale(1.3);
+  opacity: .9;
+}
+
+.cell.full {
+  box-shadow: 0 0 5px rgba(34,197,94,.3);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.legendLabel {
+  font-size: .65rem;
+  color: var(--text3);
+}
+
+.legendCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}

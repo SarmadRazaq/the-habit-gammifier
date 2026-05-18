@@ -1,0 +1,298 @@
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cardTitle {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.btnAdd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 5px 12px;
+  color: var(--text2);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btnAdd:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(124,92,252,.06);
+}
+
+.list { list-style: none; }
+
+/* ── Habit item ────────────────────────────────────── */
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 16px 13px 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+  position: relative;
+  touch-action: manipulation;
+}
+.item:last-child { border-bottom: none; }
+.item:hover      { background: rgba(124,92,252,.025); }
+.item.done       { background: rgba(34,197,94,.025); }
+.item.dragging   { background: var(--s2); box-shadow: 0 8px 24px rgba(0,0,0,.3); border-radius: 8px; }
+
+/* Drag handle */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  padding: 3px 2px;
+  color: var(--text3);
+  cursor: grab;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .18s;
+  touch-action: none;
+  margin-top: 1px;
+}
+.dragHandle:active { cursor: grabbing; }
+.item:hover .dragHandle { opacity: 1; }
+
+/* Checkbox */
+.check {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 2px solid var(--s4);
+  background: var(--s2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
+  padding: 0;
+}
+.check svg { width: 11px; height: 11px; }
+.check:hover { border-color: var(--accent); background: rgba(124,92,252,.1); }
+.check.checked {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 12px rgba(34,197,94,.3);
+}
+.check.pop { animation: pop .26s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pop {
+  0%  { transform: scale(.8); }
+  55% { transform: scale(1.2); }
+  100%{ transform: scale(1); }
+}
+
+/* Info */
+.info {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  user-select: none;
+}
+.nameRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.name {
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: color .2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.done .name { color: var(--text2); }
+
+.timeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .68rem;
+  font-weight: 600;
+  color: var(--accent2);
+  background: rgba(124,92,252,.1);
+  border: 1px solid rgba(124,92,252,.18);
+  border-radius: 5px;
+  padding: 1px 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.description {
+  font-size: .75rem;
+  color: var(--text2);
+  margin-top: 3px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.streakLine {
+  font-size: .7rem;
+  color: var(--text3);
+  margin-top: 4px;
+  transition: color .2s;
+}
+.streakLine.lit { color: var(--gold); }
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity .18s;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.item:hover .actions { opacity: 1; }
+
+.actBtn {
+  width: 27px;
+  height: 27px;
+  border-radius: 7px;
+  border: 1px solid var(--border2);
+  background: var(--s2);
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .18s;
+  padding: 0;
+}
+.actBtn:hover         { border-color: var(--accent); color: var(--accent); background: rgba(124,92,252,.08); }
+.actBtn.danger:hover  { border-color: var(--red);    color: var(--red);    background: rgba(239,68,68,.08); }
+
+/* ── Edit / Add shared ─────────────────────────────── */
+.editPanel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.addForm {
+  border-top: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--s2);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fieldLabel {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.optional {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text3);
+  font-size: .65rem;
+}
+.fieldInput {
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 11px;
+  color: var(--text);
+  font-size: .875rem;
+  outline: none;
+  width: 100%;
+  transition: border-color .2s;
+}
+.fieldInput:focus { border-color: var(--accent); }
+.fieldInput::placeholder { color: var(--text3); }
+.timeInput { color-scheme: dark; }
+[data-theme="light"] .timeInput { color-scheme: light; }
+
+.fieldTextarea {
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 11px;
+  color: var(--text);
+  font-size: .875rem;
+  outline: none;
+  width: 100%;
+  resize: vertical;
+  min-height: 56px;
+  line-height: 1.5;
+  transition: border-color .2s;
+}
+.fieldTextarea:focus { border-color: var(--accent); }
+.fieldTextarea::placeholder { color: var(--text3); }
+
+.editActions {
+  display: flex;
+  gap: 8px;
+}
+.btnConfirm {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 8px 16px;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .18s, transform .12s;
+}
+.btnConfirm:hover  { opacity: .88; }
+.btnConfirm:active { transform: scale(.97); }
+.btnDismiss {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .18s;
+}
+.btnDismiss:hover { color: var(--text); border-color: var(--text3); }
+
+.empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text3);
+  font-size: .875rem;
+}

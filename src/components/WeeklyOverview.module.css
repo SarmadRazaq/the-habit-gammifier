@@ -1,0 +1,71 @@
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.sectionHead {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.dayLabel {
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--s4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .65rem;
+  font-weight: 700;
+  color: var(--text3);
+  transition: all .25s;
+}
+
+.ring.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.ring.full {
+  background: var(--green-dim);
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 0 0 14px rgba(34,197,94,.18);
+}
+
+.ring.full.today {
+  box-shadow: 0 0 14px rgba(34,197,94,.18), 0 0 0 3px var(--green-dim);
+}
+
+.ring.partial {
+  border-color: var(--gold);
+  color: var(--gold);
+}
