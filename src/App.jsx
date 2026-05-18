@@ -16,6 +16,8 @@ import LevelCard      from './components/LevelCard'
 import CompleteBanner from './components/CompleteBanner'
 import WeeklyOverview from './components/WeeklyOverview'
 import HabitList      from './components/HabitList'
+import WaterTracker   from './components/WaterTracker'
+import ExerciseGuide  from './components/ExerciseGuide'
 import Heatmap        from './components/Heatmap'
 import StatsPanel     from './components/StatsPanel'
 import DataControls   from './components/DataControls'
@@ -29,7 +31,7 @@ export default function App() {
   const { theme, toggle }  = useTheme()
   const [tab, setTab]      = useState('today')
 
-  const { habits, records } = store
+  const { habits, records, waterLog } = store
   const td       = today()
   const totalPts = calcTotalPoints(habits, records)
   const todayPts = calcTodayPoints(habits, records)
@@ -37,13 +39,12 @@ export default function App() {
   const mult     = multiplier(streak)
   const done     = getDone(records, td)
   const allDone  = isAllDone(habits, records, td)
+  const glasses  = waterLog[td] ?? 0
 
   const handleToggle = useCallback((hid) => {
-    // Capture pre-toggle records for undo
     const snapshot = records
     const wasDone  = done.includes(hid)
     store.toggleHabit(hid)
-
     if (!wasDone) {
       const wouldComplete = habits.every(h => h.id === hid || done.includes(h.id))
       showToast(
@@ -77,12 +78,16 @@ export default function App() {
     store.reorderHabits(oldIdx, newIdx)
   }, [store])
 
+  const handleWater = useCallback((n) => {
+    store.setWater(n)
+  }, [store])
+
   const handleImport = useCallback((data) => {
     store.importData(data)
   }, [store])
 
   const handleReset = useCallback(() => {
-    store.importData({ habits: DEFAULT_HABITS, records: {} })
+    store.importData({ habits: DEFAULT_HABITS, records: {}, waterLog: {} })
   }, [store])
 
   return (
@@ -93,34 +98,31 @@ export default function App() {
       {tab === 'today' && (
         <>
           <StatsRow
-            totalPts={totalPts}
-            streak={streak}
-            todayPts={todayPts}
-            habitCount={habits.length}
-            doneCount={done.length}
-            mult={mult}
+            totalPts={totalPts} streak={streak}
+            todayPts={todayPts} habitCount={habits.length}
+            doneCount={done.length} mult={mult}
           />
           <LevelCard totalPts={totalPts} />
           <CompleteBanner visible={allDone} />
           <WeeklyOverview habits={habits} records={records} />
+          <WaterTracker glasses={glasses} onSet={handleWater} />
           <HabitList
-            habits={habits}
-            records={records}
-            onToggle={handleToggle}
-            onAdd={handleAdd}
-            onUpdate={handleUpdate}
-            onDelete={handleDelete}
+            habits={habits} records={records}
+            onToggle={handleToggle} onAdd={handleAdd}
+            onUpdate={handleUpdate} onDelete={handleDelete}
             onReorder={handleReorder}
           />
         </>
       )}
 
+      {tab === 'workout' && <ExerciseGuide />}
+
       {tab === 'insights' && (
         <>
-          <Heatmap   habits={habits} records={records} />
+          <Heatmap    habits={habits} records={records} />
           <StatsPanel habits={habits} records={records} />
           <DataControls
-            data={{ habits, records }}
+            data={{ habits, records, waterLog }}
             onImport={handleImport}
             onReset={handleReset}
             showToast={showToast}
@@ -129,10 +131,8 @@ export default function App() {
       )}
 
       <Toast
-        msg={toast.msg}
-        visible={toast.visible}
-        onUndo={toast.onUndo}
-        onDismiss={dismissToast}
+        msg={toast.msg} visible={toast.visible}
+        onUndo={toast.onUndo} onDismiss={dismissToast}
       />
     </div>
   )

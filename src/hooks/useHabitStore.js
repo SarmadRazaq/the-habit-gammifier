@@ -4,12 +4,14 @@ import { today } from '../utils/dates'
 
 const STORAGE_KEY = 'habitflow_v2'
 
+const DEFAULTS = { habits: DEFAULT_HABITS, records: {}, waterLog: {} }
+
 function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    if (raw) return { ...DEFAULTS, ...JSON.parse(raw) }
   } catch (_) {}
-  return { habits: DEFAULT_HABITS, records: {} }
+  return { ...DEFAULTS }
 }
 
 function persist(state) {
@@ -38,7 +40,6 @@ export function useHabitStore() {
     })
   }, [update])
 
-  // Restore a full records snapshot (used for undo)
   const restoreRecords = useCallback((records) => {
     update(prev => ({ ...prev, records }))
   }, [update])
@@ -76,9 +77,23 @@ export function useHabitStore() {
     })
   }, [update])
 
-  const importData = useCallback((data) => {
-    update(() => data)
+  const setWater = useCallback((glasses) => {
+    const td = today()
+    update(prev => ({
+      ...prev,
+      waterLog: { ...prev.waterLog, [td]: Math.max(0, Math.min(12, glasses)) },
+    }))
   }, [update])
 
-  return { ...state, toggleHabit, restoreRecords, addHabit, updateHabit, deleteHabit, reorderHabits, importData }
+  const importData = useCallback((data) => {
+    update(() => ({ ...DEFAULTS, ...data }))
+  }, [update])
+
+  return {
+    ...state,
+    toggleHabit, restoreRecords,
+    addHabit, updateHabit, deleteHabit, reorderHabits,
+    setWater,
+    importData,
+  }
 }

@@ -1,8 +1,9 @@
 import styles from './TabNav.module.css'
 
 const TABS = [
-  { id: 'today',    label: 'Today' },
-  { id: 'insights', label: 'Insights' },
+  { id: 'today',   label: 'Today'   },
+  { id: 'workout', label: 'Workout' },
+  { id: 'insights',label: 'Insights'},
 ]
 
 export default function TabNav({ active, onChange }) {
