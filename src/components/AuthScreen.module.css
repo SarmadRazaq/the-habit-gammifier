@@ -1,0 +1,136 @@
+.wrap {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--bg);
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 36px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.logo {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.sub {
+  font-size: .82rem;
+  color: var(--text2);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.sub strong { color: var(--text); }
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text3);
+}
+
+.input {
+  background: var(--s2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.input:disabled { opacity: .55; }
+
+.error {
+  background: rgba(239,68,68,.1);
+  border: 1px solid rgba(239,68,68,.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: .8rem;
+  color: var(--red);
+  line-height: 1.4;
+}
+
+.submitBtn {
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  padding: 11px;
+  cursor: pointer;
+  transition: opacity .2s, transform .1s;
+  margin-top: 4px;
+}
+
+.submitBtn:hover:not(:disabled) { opacity: .88; }
+.submitBtn:active:not(:disabled) { transform: scale(.98); }
+.submitBtn:disabled { opacity: .45; cursor: not-allowed; }
+
+.switchRow {
+  margin-top: 20px;
+  font-size: .82rem;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.switchBtn {
+  background: none;
+  border: none;
+  color: var(--accent2);
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.switchBtn:hover { color: var(--accent); }

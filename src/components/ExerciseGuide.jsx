@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { CARDIO, PPL, WEEKLY_SCHEDULE, TYPE_COLORS } from '../data/exercises'
+import MuscleDiagram from './MuscleDiagram'
 import styles from './ExerciseGuide.module.css'
 
 // ── Icons ─────────────────────────────────────────────
@@ -54,7 +55,10 @@ function ExerciseRow({ ex, checked, onToggle, accentColor }) {
       </div>
 
       {expanded && (
-        <div className={styles.exTip}>{ex.tip}</div>
+        <div className={styles.exTip}>
+          <MuscleDiagram muscle={ex.muscle} color={accentColor}/>
+          <p className={styles.exTipText}>{ex.tip}</p>
+        </div>
       )}
     </div>
   )

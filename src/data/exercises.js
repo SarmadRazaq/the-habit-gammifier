@@ -27,7 +27,7 @@ export const PPL = {
         { id: 'ohp', name: 'Overhead Press',          sets: 4, reps: '5',     muscle: 'Shoulders',   tip: 'Standing, strict — no leg drive. Bar travels in a straight line. Rest 3 min.' },
         { id: 'idp', name: 'Incline DB Press',        sets: 3, reps: '8–10',  muscle: 'Upper Chest', tip: '30–45° incline. Full stretch at bottom, squeeze at top. Rest 90 s.' },
         { id: 'lr',  name: 'Lateral Raises',          sets: 4, reps: '12–15', muscle: 'Side Delts',  tip: 'Lead with elbows, slight forward lean. Slow 3s negative. Rest 60 s.' },
-        { id: 'dip', name: 'Weighted Dips',           sets: 3, reps: '8–10',  muscle: 'Triceps',     tip: 'Lean slightly forward for chest emphasis. Use belt if bodyweight is easy.' },
+        { id: 'burp', name: 'Burpees',                 sets: 3, reps: '10–12', muscle: 'Full Body',   tip: 'Chest to floor on the way down, full lock-out press-up, then explosive jump and clap overhead. Scale with half-burpees (no jump) if needed.' },
         { id: 'ote', name: 'Overhead Tricep Extension', sets: 3, reps: '12', muscle: 'Long Head',   tip: 'Cable or EZ bar. Full stretch at bottom for long-head recruitment.' },
       ],
     },

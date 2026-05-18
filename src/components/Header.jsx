@@ -27,7 +27,7 @@ function MoonIcon() {
   )
 }
 
-export default function Header({ theme, onToggleTheme }) {
+export default function Header({ theme, onToggleTheme, onSignOut }) {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -50,6 +50,11 @@ export default function Header({ theme, onToggleTheme }) {
             {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
           </span>
         </button>
+        {onSignOut && (
+          <button className={styles.signOutBtn} onClick={onSignOut} title="Sign out">
+            Sign out
+          </button>
+        )}
       </div>
     </header>
   )

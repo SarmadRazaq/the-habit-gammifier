@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
-import { useHabitStore }   from './hooks/useHabitStore'
-import { useToast }        from './hooks/useToast'
-import { useTheme }        from './hooks/useTheme'
+import { useAuth }       from './hooks/useAuth'
+import { useHabitStore } from './hooks/useHabitStore'
+import { useToast }      from './hooks/useToast'
+import { useTheme }      from './hooks/useTheme'
 import {
   calcTotalPoints, calcTodayPoints,
   overallStreak, multiplier,
@@ -9,29 +10,41 @@ import {
 } from './utils/logic'
 import { today } from './utils/dates'
 
-import Header         from './components/Header'
-import TabNav         from './components/TabNav'
-import StatsRow       from './components/StatsRow'
-import LevelCard      from './components/LevelCard'
+import AuthScreen    from './components/AuthScreen'
+import Header        from './components/Header'
+import TabNav        from './components/TabNav'
+import StatsRow      from './components/StatsRow'
+import LevelCard     from './components/LevelCard'
 import CompleteBanner from './components/CompleteBanner'
 import WeeklyOverview from './components/WeeklyOverview'
-import HabitList      from './components/HabitList'
-import WaterTracker   from './components/WaterTracker'
-import ExerciseGuide  from './components/ExerciseGuide'
-import Heatmap        from './components/Heatmap'
-import StatsPanel     from './components/StatsPanel'
-import DataControls   from './components/DataControls'
-import Toast          from './components/Toast'
+import HabitList     from './components/HabitList'
+import WaterTracker  from './components/WaterTracker'
+import ExerciseGuide from './components/ExerciseGuide'
+import Heatmap       from './components/Heatmap'
+import StatsPanel    from './components/StatsPanel'
+import DataControls  from './components/DataControls'
+import Toast         from './components/Toast'
 
 import styles from './App.module.css'
 
-export default function App() {
-  const store              = useHabitStore()
+// ── Loading spinner ────────────────────────────────────────────────────────
+
+function Spinner() {
+  return (
+    <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ color: 'var(--text3)', fontSize: '.85rem' }}>Loading…</div>
+    </div>
+  )
+}
+
+// ── Main app ───────────────────────────────────────────────────────────────
+
+function MainApp({ userId, onSignOut, theme, onToggleTheme }) {
+  const store              = useHabitStore(userId)
   const { toast, showToast, dismissToast } = useToast()
-  const { theme, toggle }  = useTheme()
   const [tab, setTab]      = useState('today')
 
-  const { habits, records, waterLog } = store
+  const { habits, records, waterLog, loading } = store
   const td       = today()
   const totalPts = calcTotalPoints(habits, records)
   const todayPts = calcTodayPoints(habits, records)
@@ -42,19 +55,18 @@ export default function App() {
   const glasses  = waterLog[td] ?? 0
 
   const handleToggle = useCallback((hid) => {
-    const snapshot = records
-    const wasDone  = done.includes(hid)
+    const wasDone = done.includes(hid)
     store.toggleHabit(hid)
     if (!wasDone) {
       const wouldComplete = habits.every(h => h.id === hid || done.includes(h.id))
       showToast(
         wouldComplete ? '🎉 All done! +50 bonus points!' : '✓ +10 points',
-        () => store.restoreRecords(snapshot),
+        () => store.undoToggle(hid),
       )
     } else {
-      showToast('Habit unchecked', () => store.restoreRecords(snapshot))
+      showToast('Habit unchecked', () => store.undoToggle(hid))
     }
-  }, [done, habits, records, store, showToast])
+  }, [done, habits, store, showToast])
 
   const handleDelete = useCallback((hid) => {
     const habit = habits.find(h => h.id === hid)
@@ -90,9 +102,11 @@ export default function App() {
     store.importData({ habits: DEFAULT_HABITS, records: {}, waterLog: {} })
   }, [store])
 
+  if (loading) return <Spinner />
+
   return (
     <div className={styles.app}>
-      <Header theme={theme} onToggleTheme={toggle} />
+      <Header theme={theme} onToggleTheme={onToggleTheme} onSignOut={onSignOut} />
       <TabNav active={tab} onChange={setTab} />
 
       {tab === 'today' && (
@@ -136,4 +150,16 @@ export default function App() {
       />
     </div>
   )
+}
+
+// ── Root ───────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const { session, signIn, signUp, signOut } = useAuth()
+  const { theme, toggle } = useTheme()
+
+  if (session === undefined) return <Spinner />
+  if (!session) return <AuthScreen onSignIn={signIn} onSignUp={signUp} />
+
+  return <MainApp userId={session.user.id} onSignOut={signOut} theme={theme} onToggleTheme={toggle} />
 }
