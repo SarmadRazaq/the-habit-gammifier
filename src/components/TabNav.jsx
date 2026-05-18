@@ -2,6 +2,7 @@ import styles from './TabNav.module.css'
 
 const TABS = [
   { id: 'today',   label: 'Today'   },
+  { id: 'tasks',   label: 'Tasks'   },
   { id: 'workout', label: 'Workout' },
   { id: 'insights',label: 'Insights'},
 ]

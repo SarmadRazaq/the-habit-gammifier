@@ -20,6 +20,7 @@ import WeeklyOverview from './components/WeeklyOverview'
 import HabitList     from './components/HabitList'
 import WaterTracker  from './components/WaterTracker'
 import ExerciseGuide from './components/ExerciseGuide'
+import TodoList     from './components/TodoList'
 import Heatmap       from './components/Heatmap'
 import StatsPanel    from './components/StatsPanel'
 import DataControls  from './components/DataControls'
@@ -129,6 +130,7 @@ function MainApp({ userId, onSignOut, theme, onToggleTheme }) {
         </>
       )}
 
+      {tab === 'tasks'   && <TodoList userId={userId} />}
       {tab === 'workout' && <ExerciseGuide />}
 
       {tab === 'insights' && (

@@ -14,8 +14,8 @@
   background: transparent;
   border: none;
   border-radius: 9px;
-  padding: 9px 16px;
-  font-size: .85rem;
+  padding: 9px 8px;
+  font-size: .8rem;
   font-weight: 600;
   color: var(--text3);
   cursor: pointer;

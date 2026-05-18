@@ -22,6 +22,14 @@ create table public.daily_records (
   unique (user_id, habit_id, date)
 );
 
+create table public.todos (
+  id         uuid        primary key default gen_random_uuid(),
+  user_id    uuid        not null references auth.users(id) on delete cascade,
+  text       text        not null,
+  done       boolean     not null default false,
+  created_at timestamptz not null default now()
+);
+
 create table public.water_log (
   id         uuid        primary key default gen_random_uuid(),
   user_id    uuid        not null references auth.users(id) on delete cascade,
@@ -33,6 +41,7 @@ create table public.water_log (
 
 -- ── Indexes ──────────────────────────────────────────────────────────────────
 
+create index todos_user_id_idx         on public.todos(user_id, created_at);
 create index habits_user_id_idx        on public.habits(user_id);
 create index daily_records_user_idx    on public.daily_records(user_id, date);
 create index daily_records_habit_idx   on public.daily_records(habit_id);
@@ -40,9 +49,16 @@ create index water_log_user_date_idx   on public.water_log(user_id, date);
 
 -- ── Row Level Security ───────────────────────────────────────────────────────
 
+alter table public.todos        enable row level security;
 alter table public.habits       enable row level security;
 alter table public.daily_records enable row level security;
 alter table public.water_log    enable row level security;
+
+-- todos
+create policy "todos: own rows only"
+  on public.todos for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
 
 -- habits
 create policy "habits: own rows only"
