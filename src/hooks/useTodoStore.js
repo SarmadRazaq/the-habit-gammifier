@@ -12,10 +12,7 @@ export function useTodoStore(userId) {
     async function load() {
       setLoading(true)
       const { data } = await supabase
-        .from('todos')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: true })
+        .from('todos').select('*').eq('user_id', userId).order('created_at', { ascending: true })
       if (!cancelled) { setTodos(data ?? []); setLoading(false) }
     }
 
@@ -26,16 +23,10 @@ export function useTodoStore(userId) {
   const addTodo = useCallback(async (text) => {
     const trimmed = text.trim()
     if (!trimmed) return
-
-    const tempId = 'tmp_' + Date.now()
+    const tempId  = 'tmp_' + Date.now()
     setTodos(prev => [...prev, { id: tempId, text: trimmed, done: false, created_at: new Date().toISOString() }])
-
     const { data } = await supabase
-      .from('todos')
-      .insert({ user_id: userId, text: trimmed, done: false })
-      .select()
-      .single()
-
+      .from('todos').insert({ user_id: userId, text: trimmed, done: false }).select().single()
     if (data) setTodos(prev => prev.map(t => t.id === tempId ? data : t))
   }, [userId])
 
@@ -56,10 +47,7 @@ export function useTodoStore(userId) {
 
   const clearCompleted = useCallback(async () => {
     const ids = []
-    setTodos(prev => {
-      prev.forEach(t => { if (t.done) ids.push(t.id) })
-      return prev.filter(t => !t.done)
-    })
+    setTodos(prev => { prev.forEach(t => { if (t.done) ids.push(t.id) }); return prev.filter(t => !t.done) })
     if (ids.length) await supabase.from('todos').delete().in('id', ids).eq('user_id', userId)
   }, [userId])
 

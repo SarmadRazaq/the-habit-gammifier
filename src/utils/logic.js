@@ -19,7 +19,20 @@ export const DEFAULT_HABITS = [
   { id: 'eating',     name: 'Healthy Eating',               description: '', time: '' },
 ]
 
-// ── Core helpers ──────────────────────────────────────
+// ── Sunday helpers ────────────────────────────────────────────────────────
+
+export function isSunday(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d).getDay() === 0
+}
+
+function skipSunBackward(dateStr) {
+  let d = dateStr
+  while (isSunday(d)) d = shiftDate(d, -1)
+  return d
+}
+
+// ── Core helpers ──────────────────────────────────────────────────────────
 
 export function getDone(records, date) {
   return records[date] || []
@@ -31,11 +44,16 @@ export function isAllDone(habits, records, date) {
   return habits.every(h => done.includes(h.id))
 }
 
+// Streak counts consecutive non-Sunday completed days; Sundays are transparent
 export function overallStreak(habits, records) {
-  const td = today()
+  if (!habits.length) return 0
+  const td  = today()
+  // Start from the most recent non-Sunday day
+  let start = skipSunBackward(td)
+  let cur   = isAllDone(habits, records, start) ? start : skipSunBackward(shiftDate(start, -1))
   let streak = 0
-  let cur = isAllDone(habits, records, td) ? td : shiftDate(td, -1)
   for (let i = 0; i < 9999; i++) {
+    if (isSunday(cur)) { cur = shiftDate(cur, -1); continue }
     if (isAllDone(habits, records, cur)) { streak++; cur = shiftDate(cur, -1) }
     else break
   }
@@ -43,19 +61,21 @@ export function overallStreak(habits, records) {
 }
 
 export function habitStreak(records, hid) {
-  const td = today()
+  const td       = today()
   const todayDone = getDone(records, td).includes(hid)
-  let streak = 0, cur
+  let streak = 0
 
-  if (todayDone) {
+  let cur
+  if (todayDone && !isSunday(td)) {
     streak = 1; cur = shiftDate(td, -1)
   } else {
-    const yest = shiftDate(td, -1)
-    if (!getDone(records, yest).includes(hid)) return 0
-    streak = 1; cur = shiftDate(yest, -1)
+    const prev = skipSunBackward(shiftDate(td, -1))
+    if (!getDone(records, prev).includes(hid)) return 0
+    streak = 1; cur = shiftDate(prev, -1)
   }
 
   for (let i = 0; i < 9999; i++) {
+    if (isSunday(cur)) { cur = shiftDate(cur, -1); continue }
     if (getDone(records, cur).includes(hid)) { streak++; cur = shiftDate(cur, -1) }
     else break
   }
@@ -65,6 +85,7 @@ export function habitStreak(records, hid) {
 export function streakOnDate(habits, records, date) {
   let streak = 0, cur = date
   for (let i = 0; i < 9999; i++) {
+    if (isSunday(cur)) { cur = shiftDate(cur, -1); continue }
     if (isAllDone(habits, records, cur)) { streak++; cur = shiftDate(cur, -1) }
     else break
   }
@@ -77,10 +98,11 @@ export function multiplier(streak) {
   return 1.0
 }
 
+// Sundays earn 0 points and don't affect total
 export function calcTotalPoints(habits, records) {
   let total = 0
   for (const [date, ids] of Object.entries(records)) {
-    if (!ids?.length) continue
+    if (!ids?.length || isSunday(date)) continue
     const base  = ids.length * 10
     const bonus = habits.length && habits.every(h => ids.includes(h.id)) ? 50 : 0
     const mult  = multiplier(streakOnDate(habits, records, date))
@@ -90,8 +112,9 @@ export function calcTotalPoints(habits, records) {
 }
 
 export function calcTodayPoints(habits, records) {
-  const td   = today()
-  const ids  = getDone(records, td)
+  const td = today()
+  if (isSunday(td)) return 0
+  const ids   = getDone(records, td)
   const base  = ids.length * 10
   const bonus = habits.length && habits.every(h => ids.includes(h.id)) ? 50 : 0
   const mult  = multiplier(overallStreak(habits, records))
@@ -105,27 +128,23 @@ export function getLevel(pts) {
   return LEVELS[0]
 }
 
-// ── Stats ─────────────────────────────────────────────
+// ── Stats ─────────────────────────────────────────────────────────────────
 
 export function totalDaysTracked(records) {
-  return Object.values(records).filter(ids => ids?.length > 0).length
+  return Object.keys(records).filter(d => !isSunday(d) && records[d]?.length > 0).length
 }
 
 export function bestOverallStreak(habits, records) {
   if (!habits.length) return 0
   const recordDates = Object.keys(records).sort()
   if (!recordDates.length) return 0
-
   const minDate = recordDates[0]
   const maxDate = today()
   let best = 0, current = 0, d = minDate
-
   while (d <= maxDate) {
-    if (isAllDone(habits, records, d)) {
-      current++
-      if (current > best) best = current
-    } else {
-      current = 0
+    if (!isSunday(d)) {
+      if (isAllDone(habits, records, d)) { current++; if (current > best) best = current }
+      else current = 0
     }
     d = shiftDate(d, 1)
   }
@@ -134,7 +153,7 @@ export function bestOverallStreak(habits, records) {
 
 export function avgDailyCompletion(habits, records) {
   if (!habits.length) return 0
-  const activeDates = Object.keys(records).filter(d => records[d]?.length > 0)
+  const activeDates = Object.keys(records).filter(d => !isSunday(d) && records[d]?.length > 0)
   if (!activeDates.length) return 0
   const sum = activeDates.reduce((acc, d) => {
     const cnt = habits.filter(h => records[d].includes(h.id)).length
@@ -143,42 +162,29 @@ export function avgDailyCompletion(habits, records) {
   return Math.round(sum / activeDates.length)
 }
 
-// Per-habit: completion rate and best streak across all tracked days
 export function habitStats(records, hid) {
-  const dates = Object.keys(records).sort()
+  const dates = Object.keys(records).filter(d => !isSunday(d)).sort()
   if (!dates.length) return { rate: 0, bestStreak: 0 }
-
-  const doneDays  = dates.filter(d => records[d]?.includes(hid)).length
-  const rate      = Math.round((doneDays / dates.length) * 100)
-
+  const doneDays = dates.filter(d => records[d]?.includes(hid)).length
+  const rate     = Math.round((doneDays / dates.length) * 100)
   let best = 0, current = 0, prev = null
   for (const date of dates) {
-    // Reset streak if there's a gap between days
     if (prev && date !== shiftDate(prev, 1)) current = 0
-    if (records[date]?.includes(hid)) {
-      current++
-      if (current > best) best = current
-    } else {
-      current = 0
-    }
+    if (records[date]?.includes(hid)) { current++; if (current > best) best = current }
+    else current = 0
     prev = date
   }
-
   return { rate, bestStreak: best }
 }
 
-// Build heatmap grid: numWeeks columns × 7 rows, Mon → Sun
 export function buildHeatmap(habits, records, numWeeks = 16) {
   const td = today()
-
-  // Find Monday of current week
   const [y, m, d] = td.split('-').map(Number)
-  const jsDay = new Date(y, m - 1, d).getDay() // 0=Sun
+  const jsDay = new Date(y, m - 1, d).getDay()
   const daysToMonday = jsDay === 0 ? 6 : jsDay - 1
-  const thisMonday = shiftDate(td, -daysToMonday)
-  const startDate  = shiftDate(thisMonday, -(numWeeks - 1) * 7)
-
-  const grid = [] // grid[col][row]
+  const thisMonday   = shiftDate(td, -daysToMonday)
+  const startDate    = shiftDate(thisMonday, -(numWeeks - 1) * 7)
+  const grid = []
   for (let col = 0; col < numWeeks; col++) {
     const week = []
     for (let row = 0; row < 7; row++) {
@@ -192,6 +198,49 @@ export function buildHeatmap(habits, records, numWeeks = 16) {
     }
     grid.push(week)
   }
-
   return { grid, startDate }
+}
+
+// ── Report data ───────────────────────────────────────────────────────────
+
+export function getWeeklyData(habits, records) {
+  const td  = today()
+  const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+  return Array.from({ length: 7 }, (_, i) => {
+    const date   = shiftDate(td, i - 6)
+    const [y, m, day] = date.split('-').map(Number)
+    const dayNum = new Date(y, m - 1, day).getDay()
+    const isSun  = dayNum === 0
+    const ids    = records[date] ?? []
+    const total  = habits.length
+    return {
+      date,
+      label:    DOW[dayNum],
+      pct:      total > 0 && !isSun ? ids.length / total : 0,
+      done:     ids.length,
+      total,
+      pts:      isSun ? 0 : Math.round(ids.length * 10 * multiplier(streakOnDate(habits, records, date))),
+      isToday:  date === td,
+      isSunday: isSun,
+    }
+  })
+}
+
+export function getMonthlyData(habits, records) {
+  const td  = today()
+  return Array.from({ length: 30 }, (_, i) => {
+    const date   = shiftDate(td, i - 29)
+    const [y, m, day] = date.split('-').map(Number)
+    const isSun  = new Date(y, m - 1, day).getDay() === 0
+    const ids    = records[date] ?? []
+    const total  = habits.length
+    return {
+      date,
+      pct:     total > 0 && !isSun ? ids.length / total : null,
+      done:    ids.length,
+      total,
+      isToday: date === td,
+      isSunday: isSun,
+    }
+  })
 }

@@ -1,0 +1,455 @@
+.board {
+  padding: 0 16px 100px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ── Sub-tabs ─────────────────────────────────────────────────────────────── */
+
+.subTabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--s2);
+  padding-bottom: 0;
+}
+
+.subTab {
+  padding: 8px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text3);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+}
+
+.subTab:hover { color: var(--text1); }
+
+.subTabActive {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Section header ────────────────────────────────────────────────────────── */
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0 10px;
+}
+
+.sectionTitle {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text3);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.addBtn:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+
+/* ── Task card ─────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--s1);
+  border: 1px solid var(--s2);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: box-shadow .15s, opacity .15s;
+}
+
+.card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+
+.cardDragging {
+  opacity: .5;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+}
+
+.cardRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.dragHandle {
+  flex-shrink: 0;
+  color: var(--text3);
+  cursor: grab;
+  padding: 2px 2px 0;
+  font-size: 1rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.dragHandle:active { cursor: grabbing; }
+
+.cardBody { flex: 1; min-width: 0; }
+
+.cardTitle {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text1);
+  word-break: break-word;
+}
+
+.cardTitleDone {
+  text-decoration: line-through;
+  color: var(--text3);
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: .7rem;
+  font-weight: 600;
+  background: var(--s2);
+  color: var(--text2);
+}
+
+.badgePending   { background: color-mix(in srgb, #f59e0b 15%, transparent); color: #f59e0b; }
+.badgeProgress  { background: color-mix(in srgb, #3b82f6 15%, transparent); color: #3b82f6; }
+.badgeDone      { background: color-mix(in srgb, #22c55e 15%, transparent); color: #22c55e; }
+.badgeRecurring { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+
+.cardActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text3);
+  font-size: .85rem;
+  padding: 3px 4px;
+  border-radius: 5px;
+  line-height: 1;
+  transition: color .15s, background .15s;
+}
+
+.iconBtn:hover { color: var(--text1); background: var(--s2); }
+
+.iconBtnDanger:hover { color: #ef4444; }
+
+/* ── Description + links ────────────────────────────────────────────────────── */
+
+.cardExpanded {
+  padding: 0 12px 12px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.desc {
+  font-size: .82rem;
+  color: var(--text2);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.linkChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: .72rem;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background .15s;
+}
+
+.linkChip:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+.linkRemove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: .8rem;
+  padding: 0 0 0 2px;
+  line-height: 1;
+  opacity: .7;
+  flex-shrink: 0;
+}
+
+.linkRemove:hover { opacity: 1; }
+
+/* ── Inline forms ─────────────────────────────────────────────────────────── */
+
+.addLinkRow {
+  display: flex;
+  gap: 6px;
+}
+
+.addLinkInput {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: .8rem;
+  border: 1px solid var(--s3);
+  border-radius: 6px;
+  background: var(--s1);
+  color: var(--text1);
+  outline: none;
+}
+
+.addLinkInput:focus { border-color: var(--accent); }
+
+.addLinkBtn {
+  padding: 5px 10px;
+  font-size: .78rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ── New task form ─────────────────────────────────────────────────────────── */
+
+.form {
+  background: var(--s1);
+  border: 1px solid var(--s3);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.formRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.formInput {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: .85rem;
+  border: 1px solid var(--s3);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text1);
+  outline: none;
+  font-family: inherit;
+}
+
+.formInput:focus { border-color: var(--accent); }
+
+.formTextarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: .82rem;
+  border: 1px solid var(--s3);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text1);
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+.formTextarea:focus { border-color: var(--accent); }
+
+.formSelect {
+  padding: 8px 10px;
+  font-size: .82rem;
+  border: 1px solid var(--s3);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text1);
+  outline: none;
+  cursor: pointer;
+}
+
+.formSelect:focus { border-color: var(--accent); }
+
+.formButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.btnPrimary {
+  padding: 7px 16px;
+  font-size: .82rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.btnPrimary:hover { opacity: .88; }
+
+.btnSecondary {
+  padding: 7px 16px;
+  font-size: .82rem;
+  font-weight: 600;
+  border: 1px solid var(--s3);
+  border-radius: 7px;
+  background: none;
+  color: var(--text2);
+  cursor: pointer;
+}
+
+.btnSecondary:hover { background: var(--s2); }
+
+/* ── Completed section ─────────────────────────────────────────────────────── */
+
+.completedToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--text3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  margin: 8px 0 4px;
+}
+
+.completedToggle:hover { color: var(--text2); }
+
+/* ── History ───────────────────────────────────────────────────────────────── */
+
+.histGroup {
+  margin-bottom: 20px;
+}
+
+.histGroupTitle {
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text3);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--s2);
+}
+
+.histItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 7px;
+  margin-bottom: 4px;
+  background: var(--s1);
+  border: 1px solid var(--s2);
+}
+
+.histTitle {
+  font-size: .85rem;
+  color: var(--text1);
+}
+
+.histMeta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.histDate {
+  font-size: .72rem;
+  color: var(--text3);
+}
+
+/* ── Sunday banner ─────────────────────────────────────────────────────────── */
+
+.sunday {
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--text3);
+}
+
+.sundayIcon { font-size: 2rem; margin-bottom: 8px; }
+
+.sundayTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 4px;
+}
+
+.sundayDesc { font-size: .82rem; }
+
+/* ── Empty state ────────────────────────────────────────────────────────────── */
+
+.empty {
+  text-align: center;
+  padding: 24px 0;
+  color: var(--text3);
+  font-size: .82rem;
+}
+
+/* ── Status cycle button ──────────────────────────────────────────────────── */
+
+.statusBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: .7rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.statusBtn:hover { opacity: .8; }

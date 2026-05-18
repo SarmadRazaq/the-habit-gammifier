@@ -20,9 +20,10 @@ import WeeklyOverview from './components/WeeklyOverview'
 import HabitList     from './components/HabitList'
 import WaterTracker  from './components/WaterTracker'
 import ExerciseGuide from './components/ExerciseGuide'
-import TodoList     from './components/TodoList'
+import TaskBoard    from './components/TaskBoard'
 import Heatmap       from './components/Heatmap'
 import StatsPanel    from './components/StatsPanel'
+import ReportsPanel  from './components/ReportsPanel'
 import DataControls  from './components/DataControls'
 import Toast         from './components/Toast'
 
@@ -130,13 +131,14 @@ function MainApp({ userId, onSignOut, theme, onToggleTheme }) {
         </>
       )}
 
-      {tab === 'tasks'   && <TodoList userId={userId} />}
+      {tab === 'tasks'   && <TaskBoard userId={userId} />}
       {tab === 'workout' && <ExerciseGuide />}
 
       {tab === 'insights' && (
         <>
-          <Heatmap    habits={habits} records={records} />
-          <StatsPanel habits={habits} records={records} />
+          <ReportsPanel habits={habits} records={records} />
+          <Heatmap      habits={habits} records={records} />
+          <StatsPanel   habits={habits} records={records} />
           <DataControls
             data={{ habits, records, waterLog }}
             onImport={handleImport}
